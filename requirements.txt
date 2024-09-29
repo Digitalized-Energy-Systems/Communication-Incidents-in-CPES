@@ -1,0 +1,23 @@
+h5py==3.10.0
+mango-agents @ git+https://github.com/OFFIS-DAI/mango.git@message_manipulation
+mango-library @ git+https://github.com/OFFIS-DAI/mango-library.git@communication_incidents
+matplotlib==3.8.4
+matplotlib-inline==0.1.7
+midas-comdata==1.0.0rc5
+midas-dlpdata==1.0.0rc6
+midas-goa==1.0.0rc6
+midas-mosaik==1.1.0
+midas-powergrid==1.0.14
+midas-pwdata==1.0.0
+midas-sbdata==1.0.1
+midas-sndata==1.0.2
+midas-store==1.0.0
+midas-timesim==1.0.0rc5
+midas-util==1.1.1
+midas-weather==1.1.4
+numpy==1.26.4
+pandapower==2.14.6
+pandas==2.2.1
+protobuf==3.13.0
+psutil==6.0.0
+simbench==1.4.0
