@@ -12,7 +12,7 @@ from config import SIMULATION_HOURS_IN_RESOLUTION, END
 from mango_library.coalition.core import CoalitionAssignmentConfirm
 from mango_library.negotiation.cohda.cohda_messages import StartCohdaNegotiationMessage, ConfirmCohdaSolutionMessage
 from mango_library.negotiation.termination import NegotiationTerminationDetectorRole, TerminationMessage
-from messages import AggregatedSolutionMessage, RedispatchFlexibilityRequest, RedispatchFlexibilityReply, \
+from agents.messages import AggregatedSolutionMessage, RedispatchFlexibilityRequest, RedispatchFlexibilityReply, \
     CallForAdaption
 
 GER = "%Y-%m-%d %H:%M:%S"
@@ -452,5 +452,4 @@ class AggregatorAgent(RoleAgent):
         return timeout_reached
 
     def _is_next_step(self):
-        print('check if next step reached, ', self.container.clock.time)
         return self.container.clock.time >= self._seconds_running + 900.
