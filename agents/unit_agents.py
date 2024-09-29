@@ -12,9 +12,9 @@ from midas.util.base_data_model import DataModel
 
 from config import MIDAS_DATA, STEP_SIZE, PARAMS_BATT, INITS_BATT, SIMULATION_HOURS_IN_RESOLUTION, WD_PATH, T_AIR, WIND, \
     PRESSURE, SCHEDULE_PERCENTAGES, BH, DH, SIMULATION_HOURS, NUMBER_OF_SCHEDULES_PER_AGENT
-from flexibility_model import AdaptedFlexibilityModel
+from agents.flexibility_model import AdaptedFlexibilityModel
 from mango_library.negotiation.cohda.cohda_messages import StartCohdaNegotiationMessage
-from messages import RedispatchFlexibilityRequest, RedispatchFlexibilityReply
+from agents.messages import RedispatchFlexibilityRequest, RedispatchFlexibilityReply
 from pysimmods.buffer.batterysim import Battery
 from pysimmods.generator import WindPowerPlantSystem
 from pysimmods.generator.chplpgsim import CHPLPG
