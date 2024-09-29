@@ -6,7 +6,7 @@ import h5py
 import numpy as np
 from mango import RoleAgent
 
-from messages import AggregatedSolutionMessage, CallForAdaption
+from agents.messages import AggregatedSolutionMessage, CallForAdaption
 
 
 class GridAgent(RoleAgent):
