@@ -2,7 +2,8 @@ This repository allows to investigate communication incidents in Cyber-Physical 
 The scenario consists of an agent system building a neighborhood grid and performing self-consumption optimization. The results
 of the optimzation are forwarded via an Aggregator Agent to the Grid Operator Agent, which is responsible to check the results regarding
 grid or market constraints. If any adaptions are necessary, these are forwarded via the Aggregator Agent to the neighborhood grid.
-The neighborhood grid then again performs a self-consumption optimization, taking into account the control signals of the Grid Operator Agent.optimization
+The neighborhood grid then again performs a self-consumption optimization, taking into account the control signals of the Grid Operator Agent.
+The communication network was created using [trace](https://github.com/OFFIS-DAI/trace).
 
 The implementation integrates the consideration of different communication incidents: Asset failure (an agent stops to respond to others),
 communication failure (the communication between field and control center fails or vice versa), communication delay (data is transferred slower than usual)
