@@ -19,17 +19,19 @@ MIDAS_DATA = data_path_midas / 'midas_data' / RuntimeConfig().data["smart_nord"]
 STEP_SIZE = 900
 NUM_SIMULATIONS = 200
 # Maximum Wind at this time
-START = '2022-07-23 14:00:00'
-START_FORMAT_CSV = '23.07.2022 14:00:00'
-END = '2022-07-23 15:00:00'
+# 11:45 - 13:00
+START = '2022-07-23 13:00:00'
+START_FORMAT_CSV = '23.07.2022 13:00:00'
+END = START  # '2022-07-23 12:00:00'
 SIMULATION_HOURS = 6
 SIMULATION_HOURS_IN_RESOLUTION = int(SIMULATION_HOURS * 4)
 NUMBER_OF_SCHEDULES_PER_AGENT = 10
-
-NUMBER_OF_WIND_AGENTS = 10
-NUMBER_OF_PV_AGENTS = 10
-NUMBER_OF_CHPS = 10
-NUMBER_OF_BATTERIES = 10
+# 2 Wind, 3 PV, 2 CHP, 3 Batteries,
+# 10 Households
+NUMBER_OF_WIND_AGENTS = 2
+NUMBER_OF_PV_AGENTS = 3
+NUMBER_OF_CHPS = 2
+NUMBER_OF_BATTERIES = 3
 NUMBER_OF_HOUSEHOLDS = 10
 
 NUMBER_OF_AGENTS_TOTAL = NUMBER_OF_WIND_AGENTS + NUMBER_OF_CHPS + NUMBER_OF_PV_AGENTS + NUMBER_OF_BATTERIES + NUMBER_OF_HOUSEHOLDS
@@ -44,11 +46,22 @@ db_file = 'results' + START + '.hdf5'
 # 8. Compromised process data
 # 9. No communication from Aggregator Agent to neighborhood grid
 # 10. No communication from neighborhood grid to Aggregator agent
-ATTACK_SCENARIO = 11
-# set to: '2' for attacks 0-4 and 8 (partition id is 2)
-# set to: 'generation_agent_1' for attacks 5, 6, 7 (agent id)
-# set to "aggregator_agent" for 9, 10
-MANIPULATED_AGENT_ID = 'aggregator_agent'
+ATTACK_SCENARIO = 0
+# choose partition id of the agent for attacks 0-4 and 8
+# choose name of the agent for attacks 5, 6, 7 (agent id)
+# set to aggregator_agent for 9, 10
+generation_agents_names = ['generation_agent_0', 'generation_agent_1', 'generation_agent_2', 'generation_agent_3',
+                           'generation_agent_4', 'generation_agent_5', 'generation_agent_6']
+generation_agents_ids = ['1', '2', '3', '4', '5', '6', '7']
+storage_agents_names = ['storage_agent_0', 'storage_agent_1', 'storage_agent_2']
+storage_agents_ids = ['8', '9', '10']
+household_agents_names = ['household_agent_0', 'household_agent_1', 'household_agent_2', 'household_agent_3',
+                          'household_agent_4', 'household_agent_5', 'household_agent_6', 'household_agent_7',
+                          'household_agent_8', 'household_agent_9']
+household_agents_ids = ['11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
+aggregator_agent_name = 'aggregator_agent'
+
+MANIPULATED_AGENT_ID = 'storage_agent_2'  # random.choice(household_agents_ids)
 
 SCHEDULE_PERCENTAGES = [0.2, 0.4, 0.6, 0.8, 1.0]
 
