@@ -4,7 +4,6 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
-from pysimmods.other.flexibility.flexibilities import Flexibilities
 from pysimmods.other.flexibility.flexibility_model import FlexibilityModel
 from pysimmods.other.flexibility.schedule import Schedule
 from pysimmods.util.date_util import GER
