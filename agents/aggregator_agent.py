@@ -7,13 +7,13 @@ from datetime import datetime, timedelta
 import h5py
 import numpy as np
 from mango import RoleAgent
-
-from config import SIMULATION_HOURS_IN_RESOLUTION, END
 from mango_library.coalition.core import CoalitionAssignmentConfirm
 from mango_library.negotiation.cohda.cohda_messages import StartCohdaNegotiationMessage, ConfirmCohdaSolutionMessage
 from mango_library.negotiation.termination import NegotiationTerminationDetectorRole, TerminationMessage
+
 from agents.messages import AggregatedSolutionMessage, RedispatchFlexibilityRequest, RedispatchFlexibilityReply, \
     CallForAdaption
+from config import SIMULATION_HOURS_IN_RESOLUTION, END
 
 GER = "%Y-%m-%d %H:%M:%S"
 logger = logging.getLogger(__name__)
@@ -138,7 +138,7 @@ class AggregatorAgent(RoleAgent):
         sender_addr = meta["sender_addr"]
         if isinstance(sender_addr, list):
             sender_addr = tuple(sender_addr)
-        self._redispatch_flexibilities[content.dates[0]][sender_addr + meta["sender_id"]] = content.flexibility
+        self._redispatch_flexibilities[content.dates[0]][meta["sender_id"]] = content.flexibility
         if len(self._aggregated_flexibility) == 0:
             self._aggregated_flexibility = [[0, 0] for _ in range(len(content.flexibility))]
 
@@ -174,18 +174,15 @@ class AggregatorAgent(RoleAgent):
         else:
             grp = f[grp_name]
         if os.path.isfile("aggregator_agent_rec_msg.h5"):
-            print('is file')
             # open updates from agents, if those are stored
             agent_msgs = [f"{agent_name}_rec_msg.h5" for agent_name in self._agent_names]
             for c_agent_name in agent_msgs:
                 file = h5py.File(c_agent_name, "a")
                 if os.path.isfile(c_agent_name):
-                    print('is file', c_agent_name)
                     groups = [key for key in file.keys()]
                     groups.sort()
                     for key in groups:
                         file.copy(key, grp, name=f"{c_agent_name[:-2]}_{key}")
-                    print('remove')
                 # os.remove(c_agent_name)
         if os.path.isfile("aggregator_agent_msg.h5") or os.path.isfile("generation_agent_0_msg.h5") or os.path.isfile(
                 "storage_agent_0_msg.h5"):
@@ -194,12 +191,10 @@ class AggregatorAgent(RoleAgent):
             for c_agent_name in agent_msgs:
                 file = h5py.File(c_agent_name, "a")
                 if os.path.isfile(c_agent_name):
-                    print('is file', c_agent_name)
                     groups = [key for key in file.keys()]
                     groups.sort()
                     for key in groups:
                         file.copy(key, grp, name=f"{c_agent_name[:-2]}_{key}")
-                    print('remove')
                 # os.remove(c_agent_name)
         if os.path.isfile("generation_agent_0.h5"):
             # open updates from agents, if those are stored
@@ -207,12 +202,10 @@ class AggregatorAgent(RoleAgent):
             for c_agent_name in agent_msgs:
                 file = h5py.File(c_agent_name, "a")
                 if os.path.isfile(c_agent_name):
-                    print('is file', c_agent_name)
                     groups = [key for key in file.keys()]
                     groups.sort()
                     for key in groups:
                         file.copy(key, grp, name=f"{c_agent_name[:-2]}_{key}")
-                    print('remove')
                 # os.remove(c_agent_name)
         f.close()
 
@@ -287,7 +280,6 @@ class AggregatorAgent(RoleAgent):
             self._adaption_running = False
             with h5py.File(self.db_file, "w") as f:
                 f.close()
-            print('START NEW NEOGITATION')
             self.start_negotiation()
         else:
             self.step_done.set_result(True)
@@ -316,8 +308,8 @@ class AggregatorAgent(RoleAgent):
                                               )
             self.negotiation_start_time = self.container.clock.time
             self._negotiation_running = True
-            self.schedule_conditional_task(self.check_next_step,
-                                           condition_func=self._is_next_step)
+            # self.schedule_conditional_task(self.check_next_step,
+            #                                condition_func=self._is_next_step)
             # self.schedule_conditional_task(self.cancel_negotiation(), condition_func=self._check_timeout)
 
     async def cancel_negotiation(self):
@@ -326,10 +318,8 @@ class AggregatorAgent(RoleAgent):
         if self._c_neg_id is not None:
             if self._c_neg_id in self._open_confirmations:
                 if self._c_neg_id not in self.handled_solutions:
-                    print('still try to handle solution')
                     self.handled_solutions.append(self._c_neg_id)
                     if self._adaption_running:
-                        print('flex already received')
                         # flexibility already received
                         self._adaption_running = False
                         self._after_adaption = True
@@ -346,7 +336,6 @@ class AggregatorAgent(RoleAgent):
                                           "sender_id": self.aid, "conversation_id": str(uuid.uuid4())
                                           })
                     return
-        print('call check next step')
         self.check_next_step(after_adaption=self._after_adaption)
 
     def handle_solution_confirm(self, content: ConfirmCohdaSolutionMessage, meta):
@@ -386,13 +375,10 @@ class AggregatorAgent(RoleAgent):
         self._negotiation_running = True
         # all 5 minutes
         self._seconds_running += 900.
-        print('current time ', self.container.clock.time)
         self.container.clock.set_time(self._seconds_running)
-        print('time now', self.container.clock.time)
         self.add_role(NegotiationTerminationDetectorRole())
         agent_addr = self.agent_addrs[0][0]
         agent_id = self._agent_addrs[0][1]
-        print('send start neg msg')
         self.schedule_instant_acl_message(StartCohdaNegotiationMessage(coalition_id=self._coalition_id,
                                                                        send_weight=True,
                                                                        target_params={
@@ -409,7 +395,6 @@ class AggregatorAgent(RoleAgent):
                                           }
                                           )
         self.negotiation_start_time = self.container.clock.time
-        print('schedule task to cancel')
         # self.schedule_conditional_task(self.cancel_negotiation(), condition_func=self._check_timeout)
 
     @property
